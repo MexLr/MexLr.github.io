@@ -5,18 +5,27 @@
       h1 {
         text-align: center;
       }
+      .audiowidget {
+        display: inline-block;
+      }
     </style>
   </head>
 
   <body id="body">
     <h1>O Mighty Sound Effects Lady</h1>
+    <button onclick="playWinnerDingsAndComeOnDown()">
+      Winner dings AND come on down!
+    </button>
+    <button onclick="playWinnerDingsAndMainTheme()">
+      Winner dings AND main theme!
+    </button>
   </body>
 
   <script>
     function createAudioWidget(
       audioId,
       caption,
-      { audioSource = `${audioId}.mp3`, fadeTime = 3, loop = false } = {}
+      { audioSource = `${audioId}.mp3`, fadeTime = 3, loop = false, defaultVolume = 1 } = {}
     ) {
       const figure = document.createElement("figure");
       const figureCaption = document.createElement("figcaption");
@@ -28,6 +37,7 @@
       if (loop) {
         audioElement.setAttribute("loop", "");
       }
+      audioElement.volume = defaultVolume;
 
       const sourceElement = document.createElement("source");
       sourceElement.setAttribute("src", audioSource);
@@ -41,16 +51,39 @@
       fadeUpButton.onclick = () => fadeVolumeOnDemand(audioId, fadeTime, 1);
       fadeUpButton.textContent = "Fade Up";
 
+      const fadeOutFullButton = document.createElement("button");
+      fadeOutFullButton.onclick = () =>
+        fadeVolumeOnDemand(audioId, fadeTime + 1.5, 0);
+      fadeOutFullButton.textContent = "Fade Out Fully";
+
       const stopButton = document.createElement("button");
       stopButton.onclick = () => stopAudio(audioId);
       stopButton.textContent = "■";
+
+      const replayButton = document.createElement("button");
+      replayButton.onclick = () => replayAudio(audioId, defaultVolume);
+      replayButton.textContent = "↶";
+
+      const replayAndFade = document.createElement("button");
+      replayAndFade.onclick = () => {
+        replayAudio(audioId, 0);
+        fadeVolumeOnDemand(audioId, fadeTime, 0.2);
+      };
+      replayAndFade.textContent = "↶ + Fade to 0.2";
 
       audioElement.appendChild(sourceElement);
       figure.appendChild(figureCaption);
       figure.appendChild(audioElement);
       figure.appendChild(fadeDownButton);
       figure.appendChild(fadeUpButton);
+      figure.appendChild(fadeOutFullButton);
       figure.appendChild(stopButton);
+      figure.appendChild(replayButton);
+      figure.appendChild(replayAndFade);
+
+      figure.style.width = "300px";
+
+      figure.className = "audiowidget";
 
       const body = document.getElementById("body");
       body.appendChild(figure);
@@ -59,6 +92,13 @@
     function stopAudio(audioId) {
       var audio = document.getElementById(audioId);
       audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function replayAudio(audioId, volume) {
+      var audio = document.getElementById(audioId);
+      audio.play();
+      audio.volume = volume;
       audio.currentTime = 0;
     }
 
@@ -80,12 +120,60 @@
         } else {
           sound.volume = targetVolume;
           clearInterval(fadeAudio);
+          if (targetVolume === 0) {
+            sound.pause();
+          }
         }
       }, (duration * 1000) / numIncrements);
     }
 
+    function playWinnerDingsAndComeOnDown() {
+      const comeOnDown = document.getElementById("come-on-down");
+
+      comeOnDown.volume = 0.2;
+      comeOnDown.play();
+
+      replayAudio("ding-ding-ding", 0.5);
+
+      fadeVolumeOnDemand("ding-ding-ding", 4, 0);
+    }
+
+    function playWinnerDingsAndMainTheme() {
+      const mainTheme = document.getElementById("main-theme");
+
+      mainTheme.volume = 0.2;
+      mainTheme.play();
+
+      replayAudio("ding-ding-ding", 0.5);
+
+      fadeVolumeOnDemand("ding-ding-ding", 4, 0);
+    }
+
     createAudioWidget("losing-horn", "Losing horn :(");
+    createAudioWidget("single-ding", "Single ding");
+    createAudioWidget("ding-ding", "Double ding");
+    createAudioWidget("ding-ding-ding", "Winner dings!", {defaultVolume: 0.5});
+    createAudioWidget("dice-game-horn", "Dice game horn", {defaultVolume: 0.4});
     createAudioWidget("main-theme", "Main theme (loop)", { loop: true });
     createAudioWidget("come-on-down", "Come on down! (loop)", { loop: true });
+    createAudioWidget("showcase", "Showcase (loop)", { loop: true });
+    createAudioWidget("cooler-showcase", "Cooler Showcase 😎 (loop)", {
+      loop: true,
+    });
+    createAudioWidget("alt-showcase-1", "Alternate Showcase 1 (loop)", {
+      loop: true,
+    });
+    createAudioWidget("alt-showcase-2", "Alternate Showcase 2 (loop)", {
+      loop: true,
+    });
+    createAudioWidget("race-game", "Race Game (loop)", {
+      loop: true,
+    });
+    createAudioWidget("thinking-music", "Thinking Music (loop)", {
+      loop: true,
+    });
+    createAudioWidget("showcase-showdown", "Showcase Showdown (loop)", {
+      loop: true,
+    });
   </script>
 </html>

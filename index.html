@@ -25,7 +25,12 @@
     function createAudioWidget(
       audioId,
       caption,
-      { audioSource = `${audioId}.mp3`, fadeTime = 3, loop = false, defaultVolume = 1 } = {}
+      {
+        audioSource = `${audioId}.mp3`,
+        fadeTime = 3,
+        loop = false,
+        defaultVolume = 1,
+      } = {}
     ) {
       const figure = document.createElement("figure");
       const figureCaption = document.createElement("figcaption");
@@ -130,6 +135,7 @@
     function playWinnerDingsAndComeOnDown() {
       const comeOnDown = document.getElementById("come-on-down");
 
+      comeOnDown.currentTime = 15.75;
       comeOnDown.volume = 0.2;
       comeOnDown.play();
 
@@ -141,6 +147,7 @@
     function playWinnerDingsAndMainTheme() {
       const mainTheme = document.getElementById("main-theme");
 
+      mainTheme.currentTime = 0.75;
       mainTheme.volume = 0.2;
       mainTheme.play();
 
@@ -150,10 +157,14 @@
     }
 
     createAudioWidget("losing-horn", "Losing horn :(");
-    createAudioWidget("single-ding", "Single ding");
-    createAudioWidget("ding-ding", "Double ding");
-    createAudioWidget("ding-ding-ding", "Winner dings!", {defaultVolume: 0.5});
-    createAudioWidget("dice-game-horn", "Dice game horn", {defaultVolume: 0.4});
+    createAudioWidget("single-ding", "Single ding", { defaultVolume: 0.8 });
+    createAudioWidget("ding-ding", "Double ding", { defaultVolume: 0.7 });
+    createAudioWidget("ding-ding-ding", "Winner dings!", {
+      defaultVolume: 0.5,
+    });
+    createAudioWidget("dice-game-horn", "Dice game horn", {
+      defaultVolume: 0.4,
+    });
     createAudioWidget("main-theme", "Main theme (loop)", { loop: true });
     createAudioWidget("come-on-down", "Come on down! (loop)", { loop: true });
     createAudioWidget("showcase", "Showcase (loop)", { loop: true });
